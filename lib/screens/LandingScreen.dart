@@ -31,7 +31,7 @@ class LandingScreen extends StatelessWidget {
   List<Widget> getAnimeList(width){
     List<Widget> childs = [];
     for(var anime in animes){
-      childs.add(AnimeBox(padding: const EdgeInsets.all(8.0), width: width, height: 500.0, anime: anime,));
+      childs.add(AnimeBox(padding: const EdgeInsets.all(8.0), width: width, height: 180.0, anime: anime,));
     }
     return childs;
   }

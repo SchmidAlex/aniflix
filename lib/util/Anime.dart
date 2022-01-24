@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 
 class Anime {
   late int anilist_id;
@@ -14,13 +12,6 @@ class Anime {
   Anime(this.anilist_id, this.title, this.descriptions, this.cover_image,
       this.genres, this.score);
 
-  printOverview(){
-
-  }
-
-  printSingleView(){
-
-  }
 }
 
 
@@ -34,16 +25,24 @@ getAnimesFromJson(dynamic jsonString){
 
     List<String> genres = List.empty(growable: true);
 
-    singleAnime['genres'].forEach((v) => genres.add(v));
+    singleAnime['genres'].forEach((v) => genres.add(checkForNull(v)));
 
     animes.add(Anime(
-      singleAnime['anilist_id'],
-      singleAnime['titles']['en'],
-      singleAnime['descriptions']['en'],
-      singleAnime['cover_image'],
+      checkForNull(singleAnime['anilist_id']),
+      checkForNull(singleAnime['titles']['en']),
+      checkForNull(singleAnime['descriptions']['en']),
+      checkForNull(singleAnime['cover_image']),
       genres,
-      singleAnime['score']
+      checkForNull(singleAnime['score'])
     ));
   }
   return animes;
+}
+
+checkForNull(dynamic checkValue){
+  if(["", null, false, 0].contains(checkValue)){
+    return "null";
+  } else {
+    return checkValue;
+  }
 }

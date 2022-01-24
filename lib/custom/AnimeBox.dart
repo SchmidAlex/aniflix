@@ -1,7 +1,5 @@
-import 'dart:html';
-
+import 'package:aniflix/screens/SingleScreen.dart';
 import 'package:aniflix/util/Anime.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnimeBox extends StatelessWidget {
@@ -15,41 +13,46 @@ class AnimeBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-        Container(
-          height: height,
-          width: width,
-          padding: padding,
-          child: Row(
-            children: [
-              Expanded(child: printCover()),
-              Expanded(child: printTitle()),
-              Expanded(child: printDescription()),
-            ],
+      InkWell(
+        child:
+          Container(
+            height: height,
+            width: width,
+            padding: padding,
+
+            child: Row(
+              children: [
+                Expanded(child: printCover()),
+                Expanded(child: printInformation()),
+              ],
+            ),
           ),
-        );
-  }
-
-  printDescription(){
-    if(anime.descriptions.isNotEmpty){
-      return Text(anime.descriptions, overflow: TextOverflow.ellipsis, maxLines: 2,);
-    } else {
-      return const Text("unfortunately there is no description", overflow: TextOverflow.ellipsis, maxLines: 2,);
-    }
-  }
-
-  printTitle(){
-    if(anime.title.isNotEmpty){
-      return Text(anime.title + '\n\n\n\n');
-    } else {
-      return const Text("unfortunately there is no title");
-    }
+        onTap: (){
+          Navigator.pushNamed(context, '/singlescreen', arguments: {'anime': anime});
+        },
+      );
   }
 
   printCover(){
-    if(anime.cover_image.isNotEmpty){
-      return Image.network(anime.cover_image);
-    } else {
+    if(anime.cover_image.contains('null')){
       return const Text("unfortunately there is no picture");
+    } else {
+      return Image.network(anime.cover_image);
     }
+  }
+
+  printInformation(){
+    var information = '';
+    if(anime.title.contains('null')){
+      information += 'Unfortunately there is no anime title \n\n';
+    } else {
+      information += anime.title + '\n\n';
+    }
+    if(anime.descriptions.contains('null')){
+      information += 'Unfortunately there is no description \n\n';
+    } else {
+      information += anime.descriptions;
+    }
+    return Text(information);
   }
 }

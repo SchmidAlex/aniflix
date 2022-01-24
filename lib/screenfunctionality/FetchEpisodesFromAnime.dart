@@ -1,17 +1,15 @@
 import 'dart:core';
 
+import 'package:aniflix/screens/SingleScreen.dart';
 import 'package:aniflix/util/Anime.dart';
 import 'package:aniflix/util/Episode.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'SingleScreenView.dart';
-
-class SingleScreen extends StatelessWidget {
+class FetchEpisodesFromAnime extends StatelessWidget {
   final Anime anime;
-  final List<Episode> episodes;
 
-  const SingleScreen({Key? key, required this.anime, required this.episodes}) : super(key: key);
+  const FetchEpisodesFromAnime({required this.anime});
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +23,19 @@ class SingleScreen extends StatelessWidget {
           width: size.width,
           height: size.height,
           child: FutureBuilder<List<Episode>>(
-            future: futureEpisodes,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                for (var episode in snapshot.data!) {
-                  episodes.add(episode);
+              future: futureEpisodes,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  for (var episode in snapshot.data!) {
+                    episodes.add(episode);
+                  }
+                  return SingleScreen(episodes: episodes, anime: anime,);
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
                 }
-                return SingleScreenView(episodes: episodes, anime: anime,);
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
               }
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            }
           ),
         ),
       ),
