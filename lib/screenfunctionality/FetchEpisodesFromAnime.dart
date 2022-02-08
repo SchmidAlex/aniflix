@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class FetchEpisodesFromAnime extends StatelessWidget {
   final Anime anime;
 
-  const FetchEpisodesFromAnime({required this.anime});
+  const FetchEpisodesFromAnime({Key? key, required this.anime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class FetchEpisodesFromAnime extends StatelessWidget {
                   }
                   return SingleScreen(episodes: episodes, anime: anime,);
                 } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
+                  return Text('Why tho + ${snapshot.error} + this throws error');
                 }
                 // By default, show a loading spinner.
                 return const CircularProgressIndicator();

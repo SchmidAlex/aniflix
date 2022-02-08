@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:aniflix/custom/AnimeBox.dart';
+import 'package:aniflix/custom/Pagination.dart';
 import 'package:aniflix/util/Anime.dart';
 import 'package:flutter/material.dart';
 

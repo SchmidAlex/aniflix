@@ -17,7 +17,7 @@ getEpisodesFromJson(dynamic jsonString){
   List<Episode> episodes = List.empty(growable: true);
 
   for(var singleEpisode in json['data']['documents']){
-    if (singleEpisode['locale'] == 'en' && !singleEpisode['source'].contains('dub')){
+    if (singleEpisode['locale'] == 'en' && singleEpisode['is_dub']){
       episodes.add(Episode(singleEpisode['title'], singleEpisode['video']));
     }
   }
