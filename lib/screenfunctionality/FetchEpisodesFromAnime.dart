@@ -47,7 +47,7 @@ class FetchEpisodesFromAnime extends StatelessWidget {
         .get(Uri.parse('https://api.aniapi.com/v1/episode?anilist_id=' + anime.anilist_id.toString()));
 
     if (response.statusCode == 200) {
-      return getAnimesFromJson(response.body);
+      return getEpisodesFromJson(response.body);
     } else {
       throw Exception('Failed to load Animes');
     }

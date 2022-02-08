@@ -21,8 +21,5 @@ getEpisodesFromJson(dynamic jsonString){
       episodes.add(Episode(singleEpisode['title'], singleEpisode['video']));
     }
   }
-  for(var episode in episodes){
-    print(episode);
-  }
   return episodes;
 }

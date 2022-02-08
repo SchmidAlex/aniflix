@@ -14,15 +14,21 @@ class EpisodeBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-      Container(
-        height: height,
-        width: width,
-        padding: padding,
-        child: Row(
-          children: [
-            Expanded(child: Text('Episode ' + number.toString() + ': ' + episode.title)),
-          ],
-        ),
+      InkWell(
+        child:
+          Container(
+            height: height,
+            width: width,
+            padding: padding,
+            child: Row(
+              children: [
+                Expanded(child: Text('Episode ' + number.toString() + ': ' + episode.title)),
+              ],
+            ),
+          ),
+        onTap: (){
+          Navigator.pushNamed(context, '/video', arguments: {'episode': episode});
+        },
       );
   }
 }
