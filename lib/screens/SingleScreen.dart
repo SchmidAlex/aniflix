@@ -65,7 +65,9 @@ class SingleScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text('${snapshot.error} + Snapshot SingleScreen');
           }
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       );
   }

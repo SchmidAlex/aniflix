@@ -64,7 +64,9 @@ class AnimeList extends StatelessWidget{
             return Text('${snapshot.error} + Snapshot LandingScreenError');
           }
           // By default, show a loading spinner.
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
     );
   }
