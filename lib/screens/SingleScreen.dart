@@ -7,41 +7,77 @@ import 'package:aniflix/util/Episode.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'SingleScreenView.dart';
 
 class SingleScreen extends StatelessWidget {
   final Anime anime;
-  final List<Episode> episodes;
+  late Future<List<Episode>> futureEpisode = fetchEpisodes();
 
-  const SingleScreen({Key? key, required this.anime, required this.episodes}) : super(key: key);
+  SingleScreen({Key? key, required this.anime,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    late List<Episode> episodes = List.empty(growable: true);
     final Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: SizedBox(
-          width: size.width,
-          height: size.height,
-          child: (
-              ListView(
-                children: getSingleBox(size.width, const EdgeInsets.all(8.0), 180.0),
-              )
-          ),
-        ),
-      ),
-    );
+    return
+      FutureBuilder<List<Episode>>(
+        future: futureEpisode,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            for(var single in snapshot.data!){
+              episodes.add(single);
+            }
+            return
+              SafeArea(
+                child: Scaffold(
+                  appBar: AppBar(
+                    title: anime.printTitle(),
+                  ),
+                  body: Column(
+                    children: [
+                      AnimeBox(padding: const EdgeInsets.all(8.0), width: size.width, height: 180.0, anime: anime),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: episodes.length,
+                          itemBuilder: (buildContext, index) {
+                            return
+                              InkWell(
+                                child:
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: ListTile(
+                                      title: Text(episodes[index].title),
+                                    ),
+                                  ),
+                                ),
+                                onTap: (){
+                                  Navigator.pushNamed(context, '/video', arguments: {'videourl': episodes[index].video});
+                                },
+                              );
+                          }
+                        )
+                      ),
+                    ],
+                  )
+                )
+              );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error} + Snapshot SingleScreen');
+          }
+          return const CircularProgressIndicator();
+        },
+      );
   }
 
-  List<Widget> getSingleBox(width, padding, height){
-    List<Widget> childs = [];
-    childs.add(AnimeBox(padding: padding, width: width, height: height, anime: anime));
-    var i = 1;
-    for(var episode in episodes){
-      childs.add(EpisodeBox(padding: padding, width: width, height: 50.0, episode: episode, number: i,));
-      i++;
+  Future<List<Episode>> fetchEpisodes() async {
+    final response = await http
+        .get(Uri.parse('https://api.aniapi.com/v1/episode?anilist_id=' + anime.anilist_id.toString()));
+
+    if (response.statusCode == 200) {
+      return getEpisodesFromJson(response.body);
+    } else {
+      throw Exception('Failed to load Animes');
     }
-    return childs;
   }
 }

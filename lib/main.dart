@@ -1,57 +1,40 @@
 import 'dart:ui';
-import 'package:aniflix/screenfunctionality/FetchAnimesAndReturnLandingScreen.dart';
-import 'package:aniflix/screenfunctionality/FetchEpisodesFromAnime.dart';
+import 'package:aniflix/screens/LandingScreen.dart';
+import 'package:aniflix/screens/SingleScreen.dart';
+import 'package:aniflix/screens/VideoScreen.dart';
+import 'package:aniflix/util/AnimeData.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'util/constants.dart';
 
 void main() {
-  runApp(const MyApp());
+  final animes = Animes();
+  animes.initData();
+  runApp(MyApp(animes: animes,));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  final Animes animes;
+  const MyApp({Key? key, required this.animes}) : super(key: key);
 
-  @override
-  MyAppState createState() => MyAppState();
-}
-
-class MyAppState extends State<MyApp> {
-  int actPagIdx = 2;
-  int maxPage = 1;
-
-  void initMaxPage(int maxPage){
-    this.maxPage = maxPage;
-  }
-
-  void incrementPage(){
-    if(actPagIdx < maxPage){
-      setState(() {
-        actPagIdx++;
-      });
-    }
-  }
-  void decrementPage(){
-    if(actPagIdx > 1){
-      setState(() {
-        actPagIdx--;
-      });
-    }
-  }
   @override
   Widget build(BuildContext context){
     double screenWidth = window.physicalSize.width;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Aniflix',
-      theme: ThemeData(primaryColor: COLOR_BLACK, accentColor: COLOR_DARK_BLUE, textTheme: screenWidth < 500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT),
-      initialRoute: '/',
-      routes: {
-        //Maybe a dynamic url with {page} or something like that
-        '/': (context) => FetchAnimesAndReturnLandingScreen(fetchPage: actPagIdx,),
-        '/singlescreen': (context) => FetchEpisodesFromAnime(anime: (ModalRoute.of(context)!.settings.arguments as Map)['anime'],),
-        //'/video': (context) => VideoScreen(episode: (ModalRoute.of(context)!.settings.arguments as Map)['episode'],),
-      },
+    return ChangeNotifierProvider<Animes>(
+        create: (_) => animes,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Aniflix',
+          theme: ThemeData(primaryColor: COLOR_BLACK, accentColor: COLOR_DARK_BLUE, textTheme: screenWidth < 500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT),
+          initialRoute: '/',
+          routes: {
+            //Maybe a dynamic url with {page} or something like that
+            '/': (context) => const LandingScreen(),
+            '/singlescreen': (context) => SingleScreen(anime: (ModalRoute.of(context)!.settings.arguments as Map)['anime'],),
+            '/video': (context) => VideoScreen(videoUrl: (ModalRoute.of(context)!.settings.arguments as Map)['videourl'],),
+          },
+        ),
     );
   }
 }

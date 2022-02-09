@@ -1,39 +1,72 @@
 import 'dart:core';
-
-import 'package:aniflix/custom/AnimeBox.dart';
-import 'package:aniflix/custom/Pagination.dart';
-import 'package:aniflix/util/Anime.dart';
+import 'package:aniflix/util/AnimeData.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LandingScreen extends StatelessWidget {
-  final List<Anime> animes;
 
-  const LandingScreen({Key? key, required this.animes}) : super(key: key);
+  const LandingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
 
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          width: size.width,
-          height: size.height,
-          child: (
-            ListView(
-              children: getAnimeList(size.width),
-            )
-          ),
+        appBar: AppBar(
+          title: const Text('All Animes'),
+        ),
+        body: Column(
+          children: const [
+            Expanded(child: AnimeList(),),
+            //TODO: Pagination buttons
+          ],
         ),
       ),
     );
   }
+}
 
-  List<Widget> getAnimeList(width){
-    List<Widget> childs = [];
-    for(var anime in animes){
-      childs.add(AnimeBox(padding: const EdgeInsets.all(8.0), width: width, height: 180.0, anime: anime,));
-    }
-    return childs;
+class AnimeList extends StatelessWidget{
+  const AnimeList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final Animes animes = Provider.of<Animes>(context);
+    return FutureBuilder(
+      future: animes.initData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return
+              ListView.builder(
+                itemCount: animes.animes.length,
+                itemBuilder: (buildContext, index) {
+                  return
+                    InkWell(
+                      child:
+                        Card(
+                            child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: ListTile(
+                                    horizontalTitleGap: 50.0,
+                                    leading: animes.animes[index].printCover(),
+                                    title: animes.animes[index].printTitle(),
+                                    subtitle: animes.animes[index].printDescription(),
+                                ),
+                            ),
+                        ),
+                      onTap: (){
+                        Navigator.pushNamed(context, '/singlescreen', arguments: {'anime': animes.animes[index]});
+                      },
+                    );
+                },
+              );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error} + Snapshot LandingScreenError');
+          }
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        }
+    );
   }
+
 }
