@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:aniflix/custom/AnimeBox.dart';
-import 'package:aniflix/custom/EpisodeBox.dart';
 import 'package:aniflix/util/Anime.dart';
 import 'package:aniflix/util/Episode.dart';
 import 'package:flutter/material.dart';
@@ -73,8 +72,9 @@ class SingleScreen extends StatelessWidget {
   }
 
   Future<List<Episode>> fetchEpisodes() async {
+    print(anime.id.toString());
     final response = await http
-        .get(Uri.parse('https://api.aniapi.com/v1/episode?anilist_id=' + anime.anilist_id.toString()));
+        .get(Uri.parse('https://api.aniapi.com/v1/episode?anime_id=1' /*+ anime.id.toString()*/));
 
     if (response.statusCode == 200) {
       return getEpisodesFromJson(response.body);

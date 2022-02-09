@@ -2,14 +2,28 @@ import 'dart:core';
 import 'package:aniflix/util/AnimeData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shake/shake.dart';
 
-class LandingScreen extends StatelessWidget {
-
+class LandingScreen extends StatefulWidget{
   const LandingScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => _LandingScreenState();
+}
 
+class _LandingScreenState extends State<LandingScreen> {
+  ShakeDetector? _detector;
+  Animes? animeData;
+
+  @override
+  initState() {
+    super.initState();
+    _detector = ShakeDetector.autoStart(onPhoneShake: randomAnime);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    animeData = Provider.of<Animes>(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -23,6 +37,16 @@ class LandingScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  randomAnime() {
+    Navigator.pushNamed(context, '/singlescreen', arguments: {'anime': animeData?.getRandomAnime()});
+  }
+
+  @override
+  dispose() {
+    _detector?.stopListening();
+    super.dispose();
   }
 }
 
