@@ -31,6 +31,7 @@ class SingleScreen extends StatelessWidget {
                 child: Scaffold(
                   appBar: AppBar(
                     title: anime.printTitle(),
+                    centerTitle: true,
                   ),
                   body: Column(
                     children: [

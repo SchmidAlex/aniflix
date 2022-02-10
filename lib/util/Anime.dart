@@ -38,22 +38,6 @@ class Anime {
       return Text(descriptions + '\n\n', overflow: TextOverflow.fade, maxLines: 5,);
     }
   }
-
-  printTitleWithDescription(){
-    var strng = '';
-    if(title.contains('null')){
-      strng += 'Unfortunately there is no anime title \n';
-    } else {
-      strng += title;
-    }
-    if(descriptions.contains('null')){
-      strng += 'Unfortunately there is no anime description \n\n';
-    } else {
-      strng += descriptions + '\n\n';
-    }
-    return Text(strng,);
-  }
-
 }
 
 

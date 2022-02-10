@@ -13,7 +13,8 @@ class LandingScreen extends StatefulWidget{
 
 class _LandingScreenState extends State<LandingScreen> {
   ShakeDetector? _detector;
-  Animes? animeData;
+  late Animes animeData;
+
 
   @override
   initState() {
@@ -28,11 +29,35 @@ class _LandingScreenState extends State<LandingScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('All Animes'),
+          centerTitle: true,
+            actions: <Widget>[
+              Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    //TODO: somehow a textfield and search it
+                  },
+                  child: const Icon(
+                    Icons.search,
+                    size: 26.0,
+                  ),
+                ),
+              ),
+            ]
         ),
         body: Column(
-          children: const [
-            Expanded(child: AnimeList(),),
-            //TODO: Pagination buttons
+          children: [
+            const Expanded(child: AnimeList(),),
+            SizedBox(
+              height: 50.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(onPressed: animeData.previousData, icon: const Icon(Icons.arrow_back_sharp), tooltip: 'Previous Page', alignment: Alignment.centerLeft,),
+                  IconButton(onPressed: animeData.nextData, icon: const Icon(Icons.arrow_forward_sharp), tooltip: 'Next Page', alignment: Alignment.centerRight,),
+                ],
+              )
+            )
           ],
         ),
       ),
@@ -40,7 +65,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   randomAnime() {
-    Navigator.pushNamed(context, '/singlescreen', arguments: {'anime': animeData?.getRandomAnime()});
+    Navigator.pushNamed(context, '/singlescreen', arguments: {'anime': animeData.getRandomAnime()});
   }
 
   @override
@@ -69,7 +94,7 @@ class AnimeList extends StatelessWidget{
                       child:
                         Card(
                             child: Padding(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: ListTile(
                                     horizontalTitleGap: 50.0,
                                     leading: animes.animes[index].printCover(),

@@ -20,16 +20,16 @@ class Animes extends ChangeNotifier {
 
   List<Anime> get animes =>List.unmodifiable(_animes);
 
-  getNextData() async {
+  nextData() async {
     page++;
-    final response = await http.get(Uri.parse('https://api.aniapi.com/v1/anime?page=' + page.toString()));
-    if (response.statusCode == 200) {
-      _animes = getAnimesFromJson(response.body);
-    } else {
-      throw Exception('Failed to load Animes');
-    }
     notifyListeners();
-    return _animes;
+  }
+
+  previousData() async {
+    if(page > 1){
+      page--;
+      notifyListeners();
+    }
   }
 
   getRandomAnime() {
