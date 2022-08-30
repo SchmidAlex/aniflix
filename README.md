@@ -1,6 +1,6 @@
 # aniflix
 
-netflix for animes
+Netflix for animes. Due to some changes on the API, the app doesnt work anymore.
 
 ## Getting Started
 
